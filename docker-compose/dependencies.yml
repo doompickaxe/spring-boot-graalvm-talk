@@ -1,0 +1,148 @@
+services:
+  1-postgres:
+    image: postgres:18
+    networks:
+      - graal
+    ports:
+      - "1432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      start_interval: 1s
+      start_period: 1s
+      interval: 1s
+      retries: 120
+
+  2-postgres:
+    image: postgres:18
+    networks:
+      - graal
+    ports:
+      - "2432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      start_interval: 1s
+      start_period: 1s
+      interval: 1s
+      retries: 120
+
+  3-postgres:
+    image: postgres:18
+    networks:
+      - graal
+    ports:
+      - "3432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      start_interval: 1s
+      start_period: 1s
+      interval: 1s
+      retries: 120
+
+  4-postgres:
+    image: postgres:18
+    networks:
+      - graal
+    ports:
+      - "4432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      start_interval: 1s
+      start_period: 1s
+      interval: 1s
+      retries: 120
+
+  5-postgres:
+    image: postgres:18
+    networks:
+      - graal
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      start_interval: 1s
+      start_period: 1s
+      interval: 1s
+      retries: 120
+
+  6-postgres:
+    image: postgres:18
+    networks:
+      - graal
+    ports:
+      - "6432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      start_interval: 1s
+      start_period: 1s
+      interval: 1s
+      retries: 120
+
+  7-postgres:
+    image: postgres:18
+    networks:
+      - graal
+    ports:
+      - "7432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      start_interval: 1s
+      start_period: 1s
+      interval: 1s
+      retries: 120
+
+  8-postgres:
+    image: postgres:18
+    networks:
+      - graal
+    ports:
+      - "8432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      start_interval: 1s
+      start_period: 1s
+      interval: 1s
+      retries: 120
+
+  9-postgres:
+    image: postgres:18
+    networks:
+      - graal
+    ports:
+      - "9432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      start_interval: 1s
+      start_period: 1s
+      interval: 1s
+      retries: 120
+
+  caddy:
+    networks:
+      - graal
+    image: caddy:latest
+    volumes:
+      - ./:/etc/caddy
+    ports:
+      - "8000:80"
+
+networks:
+  graal:
+    driver: bridge

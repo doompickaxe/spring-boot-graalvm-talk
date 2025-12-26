@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="1-create-tables" author="kw">
+
+        <createTable tableName="users">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="name" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="email" type="text">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="groups">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="name" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="owner" type="bigint">
+                <constraints referencedColumnNames="id" referencedTableName="users" foreignKeyName="fk_group_owner"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="group_members">
+            <column name="group" type="bigint"/>
+            <column name="user" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="group_members" columnNames="group,user"/>
+
+        <createTable tableName="meetups">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="title" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="group" type="bigint">
+                <constraints nullable="false" referencedTableName="groups" referencedColumnNames="id"
+                             foreignKeyName="fk_meetups_group"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="meetup_attendees">
+            <column name="meetup" type="bigint"/>
+            <column name="user" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="meetup_attendees" columnNames="meetup,user"/>
+
+        <createTable tableName="chat_messages">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="content" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="sender" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_chat-message_sender" referencedColumnNames="id"
+                             referencedTableName="users"/>
+            </column>
+
+            <column name="recipient" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_chat-message_recipient" referencedColumnNames="id"
+                             referencedTableName="users"/>
+            </column>
+
+            <column name="draft" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>

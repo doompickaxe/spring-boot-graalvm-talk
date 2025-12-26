@@ -1,0 +1,14 @@
+[
+  {
+    "name": "liquibase.changelog.visitor.ValidatingVisitorGeneratorFactory",
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true,
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.hibernate.bytecode.internal.bytebuddy.BytecodeProviderImpl",
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true,
+    "allDeclaredConstructors": true
+  }
+]

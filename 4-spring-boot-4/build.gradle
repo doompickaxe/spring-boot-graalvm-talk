@@ -1,0 +1,42 @@
+plugins {
+    id 'org.springframework.boot' version '4.0.2'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.google.cloud.tools.jib' version '3.5.3'
+    id 'org.graalvm.buildtools.native' version '0.11.4'
+}
+
+group = 'io.kay.spring4'
+version = '0.0.1-SNAPSHOT'
+
+// spring boot 4 must use java 25 for graalvm
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-liquibase'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.liquibase:liquibase-core'
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+
+    runtimeOnly 'org.postgresql:postgresql'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+jib {
+    to.image = 'io.kay/4-normal-spring-boot-4'
+}
+
+bootBuildImage {
+    imageName = "io.kay/5-spring-boot-4-on-graal:latest"
+}

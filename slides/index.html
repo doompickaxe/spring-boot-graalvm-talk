@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>Spring Boot with GraalVM in practice</title>
+
+    <meta name="description" content="Spring Boot with GraalVM in practice">
+    <meta name="author" content="Kevin Watzal">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/blood.css" id="theme">
+    <style media="all">
+        .reveal .slides {
+            background-image: url("assets/hotsource.svg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: right top;
+            background-size: 20%;
+        }
+
+        strong {
+            color: #FF292E;
+        }
+    </style>
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+</head>
+
+<body>
+
+<div class="reveal">
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+        <section data-auto-animate>
+            <h3 data-id="code-title">Spring Boot native images in practice</h3>
+            <p>
+                my journey of converting Spring Boot applications into native images
+            </p>
+            <div style="padding: 5%"></div>
+            <small>
+                Kevin Watzal
+            </small>
+        </section>
+
+        <section data-auto-animate>
+            <h2>About me</h2>
+
+            <div style="display: flex; padding-right: 2%">
+                <div style="display: flex; flex-direction: column; width: 60%">
+                    <p>Eager to try out different tools</p>
+                    <p>Developer at <img src="assets/hotsource.svg"
+                                         style="height: 50px; margin-bottom: -15px"/></p>
+                    <p>Love puns</p>
+                </div>
+
+                <div style="display: flex; width: 40%">
+                    <img src="assets/me.png" style="width: 100%; height: 90%"/>
+                </div>
+            </div>
+        </section>
+
+        <section data-auto-animate data-auto-animate-unmatched="fade">
+            <h3>Topics today</h3>
+            <ul>
+                <li>What positive/n(eg)ative implications it had</li>
+                <li>My experience with native images at work</li>
+                <li>How-To & showcase</li>
+                <li>Performance tests results</li>
+            </ul>
+            <p>With screenshots <strong>from production</strong></p>
+        </section>
+
+        <section data-auto-animate data-auto-animate-unmatched="fade">
+            <h3>I won't cover <br/>details about:</h3>
+            <ul>
+                <li>Spring Boot</li>
+                <li>GraalVM</li>
+                <li>Native images</li>
+            </ul>
+        </section>
+
+        <section data-auto-animate>
+            <p>Who of you have successfully used Spring Boot in a native image <strong>in production</strong>?</p>
+        </section>
+
+        <section data-auto-animate data-auto-animate-unmatched="fade">
+            <h3 data-id="code-title"><strong>Which</strong> of these applications is a native image?</h3>
+            <div style="display: flex; justify-content: center">
+                <div style="border: 2px solid; display: flex; padding: 10px; margin: 100px;">App 2</div>
+                <div style="border: 2px solid; display: flex; padding: 10px; margin: 100px;">App 3</div>
+            </div>
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">Native Image vs Non-Native</h2>
+            <p>2 similar services for <strong>comparison</strong> of our company in production</p>
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">Native Image vs Non-Native</h2>
+            <p>Both use:</p>
+            <ul>
+                <li>Spring JPA</li>
+                <li>Liquibase</li>
+                <li>Rest API</li>
+                <li>Calls other services</li>
+                <li>GCP Pub/Sub</li>
+            </ul>
+        </section>
+
+        <section data-auto-animate>
+            <h3 data-id="code-title">Resources</h3>
+            <p style="float:left">Non-native</p>
+            <img style="width: 70%" src="assets/proof/non-graal_resources.png"/>
+
+            <p style="float:left">Native</p>
+            <img style="width: 70%" src="assets/proof/graal_resources.png"/>
+        </section>
+
+        <section data-auto-animate>
+            <h3 data-id="code-title">Resources</h3>
+            <img src="assets/proof/non-graal_resources.png"/>
+            <img src="assets/proof/graal_resources.png"/>
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">Startup time</h2>
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">Startup time</h2>
+            <img src="assets/proof/non-graal_startup.png"/>
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">Startup time</h2>
+            <img src="assets/proof/non-graal_startup.png"/>
+            <img src="assets/proof/graal_startup.png"/>
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">Benefits</h2>
+            <ul>
+                <li>Amazing startup time</li>
+                <li>Less resource usage (especially at startup)</li>
+                <li>No JIT warmup</li>
+            </ul>
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">Downsides</h2>
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">Build-time</h2>
+            <p>Non-Native</p>
+            <img src="assets/proof/non-graal_build-time.png"/>
+
+            <p>Native</p>
+            <img src="assets/proof/graal_build-time.png"/>
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">Build-time</h2>
+            <p>Non-Native</p>
+            <img src="assets/proof/non-graal_build-time.png"/>
+            <pre>
+            	<code class="hljs language-yaml" data-trim>
+                     options:
+                        machineType: 'E2_HIGHCPU_8'
+            	</code>
+            </pre>
+
+            <p>Native</p>
+            <img src="assets/proof/graal_build-time.png"/>
+            <pre>
+            	<code class="hljs language-yaml" data-trim>
+                     options:
+                        machineType: 'E2_HIGHCPU_32'
+            	</code>
+            </pre>
+        </section>
+
+        <section class="top-aligned" data-auto-animate data-background-size="75%"
+                 data-background="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYWU4OXo0czllbXRjeXJvNTN1NjU1OGhzcjgxZXk2bXk4ejBzNndhdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/143vPc6b08locw/giphy.gif">
+            <h2><strong>Reflection...</strong></h2>
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">Reflection...</h2>
+            <p>...issues only occur <strong>at runtime</strong></p>
+            <pre>
+            	<code class="hljs language-text" data-trim style="width: 120%;">
+                  com.fasterxml.jackson.databind.exc.InvalidDefinitionException:
+                    Cannot construct instance of `io.kay.graal.clients.PushServerResponse`:
+                    cannot deserialize from Object value (no delegate- or property-based Creator):
+                    this appears to be a native image,
+                    in which case you may need to configure reflection
+                    for the class that is to be deserialized
+            	</code>
+            </pre>
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">Downsides</h2>
+            <ul>
+                <li>Buildtime increases a lot (1 minute vs 8 minutes)</li>
+                <li>Reflection issues at runtime</li>
+                <li>Limited bytecode manipulation</li>
+                <li>Some dependencies might not work</li>
+            </ul>
+        </section>
+
+        <section class="top-aligned" data-auto-animate data-background-size="100%"
+                 data-background="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWJ5ZXp4c2JqcmUxM2lvaTZ2NzYybDd3NzA4NnVkcDk4aXNuMTBxZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xUPGcqpOD13ZhkBZGE/giphy.gif">
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">There are <strong>solutions</strong> for
+                <span style="text-decoration: line-through;">all</span>
+                most downsides
+            </h2>
+        </section>
+
+        <section data-auto-animate>
+            <h1>Let's hop into the code</h1>
+        </section>
+
+        <section data-auto-animate>
+            <h2 style="color: #fff;">Performance Tests with Gatling</h2>
+            <p>First cold start, without restart a second run</p>
+            <pre>
+            	<code class="hljs language-java" data-trim>
+                     .injectOpen(
+                        nothingFor(3),
+                        rampUsers(5_000).during(10)
+                     )
+            	</code>
+            </pre>
+        </section>
+
+        <section data-background-iframe="assets/results/cold-start/index.html">
+            <div id="overlay"
+                 style="position: absolute; width: 7%; top: -350px; background-color: rgba(0, 0, 0, 0.8); padding: 10px; font-size: 10px;">
+                <h2 style="color: #fff;">Tests</h2>
+            </div>
+        </section>
+
+        <section data-background-iframe="assets/results/warm-start/index.html">
+            <div id="overlay"
+                 style="position: absolute; width: 7%; top: -350px; background-color: rgba(0, 0, 0, 0.8); padding: 10px; font-size: 10px;">
+                <h2 style="color: #fff;">Tests</h2>
+            </div>
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">Tips & Tricks</h2>
+
+            <p>Understand <strong>reflect-config.json</strong></p>
+            <p>Include all <strong>needed</strong> resources</p>
+            <p>missing in buildtime = missing in runtime</p>
+            <p>Read the docs</p>
+            <p>Test containerized applications</p>
+        </section>
+
+        <section data-auto-animate>
+            <h2 data-id="code-title">Tips & Tricks</h2>
+
+            <p>Run tests with non-native container first<br/>
+                On success: build native-image and run tests against it</p>
+            <p>Adds overhead even more, but catches most issues at the correct stage</p>
+        </section>
+
+        <section data-auto-animate>
+            <h3>Useful docs</h3>
+            <p>
+                <a href="https://www.graalvm.org/latest/docs/">
+                    GraalVM docs
+                </a>
+            </p>
+            <p>
+                <a href="https://docs.spring.io/spring-boot/reference/packaging/native-image/introducing-graalvm-native-images.html">
+                    Spring Boot docs
+                </a>
+            </p>
+            <p>
+                <a href="https://github.com/oracle/graalvm-reachability-metadata">reflect-configs for libraries</a>
+            </p>
+            <p>
+                <a href="https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-GraalVM">More spring boot
+                    docs</a>
+            </p>
+        </section>
+
+        <section data-auto-animate data-background-size="75%"
+                 data-background="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDZjejY2OW9tNjVpbHVpNGJ3NnhqN2V5NjJ6YTZpYTVidXpsem40eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ip0bCPdNTYdSIRkEyJ/giphy.gif">
+            <h3><strong>Con-GRAAL-tulations</strong></h3>
+        </section>
+
+        <section data-auto-animate>
+            <h3>Common errors and resolutions</h3>
+        </section>
+
+        <section data-auto-animate>
+            <h3>Common errors and explanations</h3>
+            <p><strong>Missing runtime hints</strong></p>
+            <pre>
+            	<code class="hljs language-text" data-trim>
+                    com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Cannot construct instance of `io.kay.graal.clients.PushServerResponse`:
+                        cannot deserialize from Object value (no delegate- or property-based Creator): this appears to be a native image,
+                        in which case you may need to configure reflection for the class that is to be deserialized
+            	</code>
+            </pre>
+
+            <p>Solution:</p>
+            <pre>
+            	<code class="hljs language-java" data-trim>
+                    @RegisterReflectionForBinding({PushServerRequest.class, PushServerResponse.class})
+                    public PushServerResponse sendSms(String message) {
+                        return restClient.post()
+                            .body(new PushServerRequest(message))
+                            .retrieve()
+                            .body(PushServerResponse.class);
+                    }
+            	</code>
+            </pre>
+        </section>
+
+        <section data-auto-animate>
+            <h3>Common errors and explanations</h3>
+            <p><strong>Missing resource hints</strong></p>
+            <pre>
+            	<code class="hljs language-text" data-trim>
+org.springframework.beans.factory.BeanCreationException:
+    Error creating bean with name 'entityManagerFactory':
+        Failed to initialize dependency 'liquibase' of LoadTimeWeaverAware bean 'entityManagerFactory':
+        Error creating bean with name 'liquibase': liquibase.exception.CommandExecutionException:
+        liquibase.exception.ChangeLogParseException: The file /db/liquibase/master.xml was not found in the configured search path: ...
+            	</code>
+            </pre>
+
+            <p>Solution:</p>
+            <pre>
+            	<code class="hljs language-java" data-trim>
+                    public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
+                        hints.resources()
+                            .registerPattern("db/**");
+                    }
+            	</code>
+            </pre>
+        </section>
+
+        <section>
+            <p><strong>Missing reflection hints</strong></p>
+            <pre>
+            	<code class="hljs language-text" data-trim>
+                    Caused by: java.util.ServiceConfigurationError: org.hibernate.bytecode.spi.BytecodeProvider:
+                        Provider org.hibernate.bytecode.internal.bytebuddy.BytecodeProviderImpl not found
+            	</code>
+            </pre>
+
+            <p>Solution:</p>
+            <pre>
+            	<code class="hljs language-json" data-trim>
+                    // reflect-config.json
+                    [
+                      {
+                          "name": "org.hibernate.bytecode.internal.bytebuddy.BytecodeProviderImpl",
+                          "allDeclaredMethods": true,
+                          "allDeclaredFields": true,
+                          "allDeclaredConstructors": true
+                      }
+                    ]
+            	</code>
+            </pre>
+        </section>
+    </div>
+</div>
+
+<script src="dist/reveal.js"></script>
+<script src="plugin/zoom/zoom.js"></script>
+<script src="plugin/notes/notes.js"></script>
+<script src="plugin/search/search.js"></script>
+<script src="plugin/markdown/markdown.js"></script>
+<script src="plugin/highlight/highlight.js"></script>
+<script>
+    Reveal.initialize({
+        controls: false,
+        controlsTutorial: false,
+        preloadIframes: true,
+        hash: true,
+        history: true,
+        pdfSeparateFragments: false,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight]
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-5.0.xsd">
+
+    <changeSet id="2-insert-values" author="kw">
+
+        <sql>
+            INSERT INTO users(name, email)
+            VALUES ('Mr. X', 'mist@er.x'),
+                   ('Mr. Y', 'mist@er.y'),
+                   ('Kevin Watzal', 'kwatzal@gmail.com');
+
+            INSERT INTO groups(name, owner)
+            SELECT 'Java &amp; Friends', id
+            FROM users
+            WHERE email = 'mist@er.x';
+            INSERT INTO groups(name, owner)
+            SELECT 'Yoga', id
+            FROM users
+            WHERE email = 'mist@er.y';
+            INSERT INTO groups(name, owner)
+            SELECT 'Staring at walls', id
+            FROM users
+            WHERE email = 'mist@er.x';
+
+            INSERT INTO group_members
+            SELECT groups.id, users.id
+            FROM groups
+                     JOIN users ON 1 = 1;
+
+            INSERT INTO meetups(title, description, "group")
+            VALUES ('January meeting', 'imagine something meaningful here', (SELECT id from groups LIMIT 1)),
+                   ('February meeting', 'tba', (SELECT id from groups LIMIT 1)),
+                   ('First meeting ever', 'bring lights', (SELECT id from groups LIMIT 1 OFFSET 1));
+
+            INSERT INTO meetup_attendees
+            SELECT meetups.id, users.id
+            FROM meetups
+                     JOIN users ON 1 = 1;
+
+            INSERT INTO chat_messages(content, sender, recipient, draft)
+            VALUES ('I wanna do a talk!',
+                    (SELECT id from users WHERE email = 'kwatzal@gmail.com'),
+                    (SELECT id from users WHERE email = 'mist@er.x'),
+                    false);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: running-on-graal
+
+  datasource:
+    url: "jdbc:postgresql://5-postgres:5432/postgres"

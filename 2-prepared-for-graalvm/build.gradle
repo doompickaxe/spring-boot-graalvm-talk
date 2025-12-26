@@ -1,0 +1,42 @@
+plugins {
+    id 'org.springframework.boot' version '3.5.10'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.google.cloud.tools.jib' version '3.5.3'
+    id 'org.graalvm.buildtools.native' version '0.11.4' // native image: 1. step
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.liquibase:liquibase-core'
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+
+    runtimeOnly 'org.postgresql:postgresql'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+jib { // this service can still be built as non-native image
+    to.image = 'io.kay/2-prepared-for-graal:latest'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// native image: 2. step
+// uses paketobuildpacks
+bootBuildImage {
+    imageName = "io.kay/3-running-on-graal:latest"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}

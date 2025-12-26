@@ -1,0 +1,12 @@
+rootProject.name = 'graal-talk'
+
+include '1-normal-spring-boot-3'
+include '2-prepared-for-graalvm'
+// 3 is project 2 natively compiled
+include '4-spring-boot-4'
+// 5 is project 4 natively compiled
+include '6-java25'
+// 7 is porject 6 natively compiled
+include '8-cloud-gateway'
+
+include 'load-tests'

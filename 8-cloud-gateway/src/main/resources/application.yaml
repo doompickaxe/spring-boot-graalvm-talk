@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: change_path
+              uri: "${server}"
+              predicates:
+                - Path=/api/forward/**
+              filters:
+                - RewritePath=/api/forward/(?<subroute>.*),/api/$\{subroute}
+
+server: "http://caddy"

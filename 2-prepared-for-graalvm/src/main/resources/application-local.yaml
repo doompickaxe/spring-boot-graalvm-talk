@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:2432/postgres"
+
+application:
+  push-server:
+    url: http://localhost:8000
+
+server:
+  port: 8020

@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: normal-spring-boot
+
+  datasource:
+    url: "jdbc:postgresql://1-postgres:5432/postgres"
+    username: postgres
+    password: postgres
+
+  data:
+    rest:
+      base-path: /api
+
+  liquibase:
+    change-log: /db/liquibase/master.xml
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+application:
+  push-server:
+    url: http://caddy

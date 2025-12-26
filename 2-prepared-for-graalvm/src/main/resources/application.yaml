@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: prepared-for-graal
+
+  datasource:
+    url: "jdbc:postgresql://2-postgres:5432/postgres"
+    username: postgres
+    password: postgres
+
+  data:
+    rest:
+      base-path: /api
+
+  liquibase:
+    change-log: db/liquibase/master.xml
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database: postgresql
+
+  threads:
+    virtual:
+      enabled: true
+
+application:
+  push-server:
+    url: http://caddy

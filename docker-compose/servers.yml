@@ -1,0 +1,118 @@
+services:
+  1-app:
+    image: io.kay/1-normal-spring-boot-3:latest
+    networks:
+      - graal
+    ports:
+      - "8010:8080"
+    depends_on:
+      caddy:
+        condition: service_started
+      1-postgres:
+        condition: service_healthy
+
+  2-app:
+    image: io.kay/2-prepared-for-graal:latest
+    networks:
+      - graal
+    ports:
+      - "8020:8080"
+    depends_on:
+      caddy:
+        condition: service_started
+      2-postgres:
+        condition: service_healthy
+
+  3-app:
+    image: io.kay/3-running-on-graal:latest
+    networks:
+      - graal
+    ports:
+      - "8030:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=graal
+    depends_on:
+      caddy:
+        condition: service_started
+      3-postgres:
+        condition: service_healthy
+
+  4-app:
+    image: io.kay/4-normal-spring-boot-4:latest
+    networks:
+      - graal
+    ports:
+      - "8040:8080"
+    depends_on:
+      caddy:
+        condition: service_started
+      4-postgres:
+        condition: service_healthy
+
+  5-app:
+    image: io.kay/5-spring-boot-4-on-graal:latest
+    networks:
+      - graal
+    environment:
+      - SPRING_PROFILES_ACTIVE=graal
+    ports:
+      - "8050:8080"
+    depends_on:
+      caddy:
+        condition: service_started
+      5-postgres:
+        condition: service_healthy
+
+  6-app:
+    image: io.kay/6-normal-java25:latest
+    networks:
+      - graal
+    ports:
+      - "8060:8080"
+    depends_on:
+      caddy:
+        condition: service_started
+      6-postgres:
+        condition: service_healthy
+
+  7-app:
+    image: io.kay/7-java25-on-graal:latest
+    networks:
+      - graal
+    environment:
+      - SPRING_PROFILES_ACTIVE=graal
+    ports:
+      - "8070:8080"
+    depends_on:
+      caddy:
+        condition: service_started
+      7-postgres:
+        condition: service_healthy
+
+  8-app:
+    image: io.kay/8-normal-cloud-gateway:latest
+    networks:
+      - graal
+    ports:
+      - "8080:8080"
+    depends_on:
+      caddy:
+        condition: service_started
+      8-postgres:
+        condition: service_healthy
+
+  9-app:
+    image: io.kay/9-cloud-gateway-on-graal:latest
+    networks:
+      - graal
+    ports:
+      - "8090:8080"
+    depends_on:
+      caddy:
+        condition: service_started
+      9-postgres:
+        condition: service_healthy
+
+networks:
+  graal:
+    driver: bridge
