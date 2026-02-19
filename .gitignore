@@ -40,3 +40,4 @@ bin/
 .DS_Store
 *.so
 *.pdf
+!Spring Boot with GraalVM in practice.pdf
